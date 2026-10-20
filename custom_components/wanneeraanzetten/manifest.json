@@ -1,6 +1,9 @@
 {
   "domain": "wanneeraanzetten",
   "name": "Wanneer Aanzetten",
+  "categories": [
+    "energy.energy_prices"
+  ],
   "codeowners": [
     "@MikeBrachten"
   ],
