@@ -8,7 +8,10 @@ permissions:
   contents: read
 
 jobs:
+  security:
+    uses: ./.github/workflows/security.yml
   release:
+    needs: security
     name: Publish verified release
     runs-on: ubuntu-latest
     timeout-minutes: 15

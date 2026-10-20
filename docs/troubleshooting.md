@@ -50,3 +50,10 @@ Open the [bug report form](https://github.com/MikeBrachten/wanneeraanzetten-home
 Include Home Assistant and integration versions, the selected market, expected behavior, and a
 minimal reproduction. Redact passwords, tokens, email addresses, recovery codes, and private device
 names from logs. Report security issues privately through [SECURITY.md](../SECURITY.md).
+
+## HACS says “icon not available”
+
+The package includes `brand/icon.png` (256×256) and `brand/icon@2x.png` (512×512).
+Home Assistant serves local integration branding from 2026.3 onward. Some HACS list views
+still use the legacy CDN and do not display inline icons, including for installed integrations.
+That UI limitation does not affect sensors or installation. See [the upstream HACS issue](https://github.com/hacs/integration/issues/5223).

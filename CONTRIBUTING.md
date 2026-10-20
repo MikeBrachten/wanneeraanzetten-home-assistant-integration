@@ -17,6 +17,12 @@ python3.14 -m venv .venv
 .venv/bin/python scripts/build_release.py
 ```
 
+To run the minimum-version suite, use Python 3.13 in a separate environment and install
+`tests/requirements-ha-2025.1.txt`. The other historical baselines have matching files in
+`tests/`. Historical pins are intentionally excluded from automated version updates so
+Dependabot does not silently replace compatibility targets. A test-only threaded DNS fixture
+avoids resolver cleanup differences between old and current Home Assistant test harnesses.
+
 The test suite is self-contained; it does not need a production account, website source, Node.js,
 or external API access. Tests that exercise login cookies use a temporary localhost API fixture.
 
@@ -34,7 +40,7 @@ the hosted service. Review the security policy before reporting authentication v
 3. Push the release commit and wait for CI to pass.
 4. Create a `vX.Y.Z` tag matching the manifest version.
 5. The release workflow tests the tagged code, validates the version, builds the ZIP, and publishes
-   the GitHub release. A checksum file accompanies the archive.
+   the GitHub release only after secret scanning and the dependency audit pass. A checksum file accompanies the archive.
 
 HACS downloads the component from the tagged source tree. The ZIP is for manual installation;
 its root contains `custom_components/wanneeraanzetten`. No service credentials or website files

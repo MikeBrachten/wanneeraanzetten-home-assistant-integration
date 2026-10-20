@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/MikeBrachten/wanneeraanzetten-home-assistant-integration/main/custom_components/wanneeraanzetten/brand/icon.png" alt="Wanneer Aanzetten logo" width="96" height="96" align="right">
+
 # Wanneer Aanzetten — Home Assistant integration for dynamic electricity prices
 
 Bring **[wanneeraanzetten.nl](https://wanneeraanzetten.nl/)** into Home Assistant. See the current electricity spot price and get an **on/off recommendation for when to run each appliance** saved to your account. Install this custom integration through **HACS** and use its sensors in your dashboards and automations.
@@ -24,7 +26,7 @@ Bring **[wanneeraanzetten.nl](https://wanneeraanzetten.nl/)** into Home Assistan
 
 ### Requirements
 
-- Home Assistant **2026.10.0 or newer**.
+- Home Assistant **2025.1.3 or newer**.
 - [HACS](https://www.hacs.xyz/docs/use/) installed, or use [manual installation](#manual-installation).
 - A [wanneeraanzetten.nl account](https://wanneeraanzetten.nl/?view=account) with your devices saved online.
 - Internet access from Home Assistant to `wanneeraanzetten.nl`.
@@ -135,6 +137,10 @@ No. It is used during account linking in an isolated login session. Home Assista
 
 Use **Configure** on the integration to change the market. Removing the integration revokes its token when the service is reachable. Password recovery also revokes existing integration links. See [security and privacy](docs/security-and-privacy.md) for details.
 
+### Why does HACS sometimes show “icon not available”?
+
+The integration ships 256 px and 512 px brand icons, shown by Home Assistant on 2026.3 and newer. Some HACS versions still fetch list icons from the old public CDN instead of the local integration brand API. That upstream issue can leave the HACS list icon blank even when the installed integration icon works. See [HACS issue #5223](https://github.com/hacs/integration/issues/5223). The README shows the logo independently of this HACS limitation. On older Home Assistant versions, local custom-integration brand images are not supported.
+
 ### Is this an official Home Assistant integration?
 
 It is a custom integration maintained alongside the Wanneer Aanzetten service. It is not part of Home Assistant Core and is not endorsed by the Home Assistant project.
@@ -143,6 +149,15 @@ It is a custom integration maintained alongside the Wanneer Aanzetten service. I
 
 Read [troubleshooting](docs/troubleshooting.md), [contributing](CONTRIBUTING.md), [security reporting](SECURITY.md), and the [changelog](CHANGELOG.md). Please do not put passwords, tokens, recovery codes, or private account details in public issues.
 
-Tests run against Home Assistant **2026.10.2**. CI checks config flows, entity availability, automatic discovery, authentication, and the published API contract. It also validates HACS packaging and the integration manifest with hassfest.
+Every compatibility target runs the complete 23-test suite in CI:
+
+| Home Assistant | Python | Result |
+| --- | --- | --- |
+| 2025.1.3 (minimum) | 3.13 | Supported |
+| 2025.6.2 | 3.13 | Supported |
+| 2026.3.3 | 3.14 | Supported |
+| 2026.10.2 | 3.14 | Supported |
+
+CI checks config flows, entity availability, automatic discovery, authentication, and the published API contract. It validates HACS packaging and the integration manifest with hassfest. CodeQL, Gitleaks, and pip-audit run as security checks; secret and dependency checks also gate release publication. Keep your Home Assistant platform updated; compatibility coverage is not a security recommendation to stay on an old platform.
 
 This repository contains only the Home Assistant client. The hosted API and website are maintained separately. Code is licensed under the [MIT License](LICENSE). The Wanneer Aanzetten name and brand assets remain the property of their owner; see [NOTICE](NOTICE).

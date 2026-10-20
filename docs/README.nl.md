@@ -6,7 +6,7 @@ Koppel je account en gebruik de sensoren in je dashboard of automatiseringen.
 
 ## Installeren via HACS
 
-Vereist: Home Assistant 2026.10 of nieuwer, HACS en een account op
+Vereist: Home Assistant 2025.1.3 of nieuwer, HACS en een account op
 [wanneeraanzetten.nl](https://wanneeraanzetten.nl/?view=account).
 Bewaar je apparaten online in je account; apparaten die alleen in je browser staan zijn niet zichtbaar.
 
@@ -52,3 +52,10 @@ Wijzig je stroommarkt via **Configureren** bij de integratie.
 
 Bekijk de [Engelse handleiding en automatisering](../README.md),
 [probleemoplossing](troubleshooting.md) en [privacy-uitleg](security-and-privacy.md).
+
+## Logo in HACS
+
+De integratie bevat het logo op 256 en 512 pixels. Home Assistant ondersteunt lokale
+merklogo’s vanaf versie 2026.3. Sommige HACS-versies halen het lijsticoon nog bij de oude
+CDN op. Daardoor kan HACS “icon not available” tonen terwijl het logo bij de geïnstalleerde
+integratie wel werkt. Dit is een [bekend HACS-probleem](https://github.com/hacs/integration/issues/5223).

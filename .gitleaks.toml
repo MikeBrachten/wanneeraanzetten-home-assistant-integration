@@ -1,0 +1,10 @@
+title = "Wanneer Aanzetten secret scanning"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "wanneer-aanzetten-integration-token"
+description = "Wanneer Aanzetten scoped integration access token"
+regex = '''wa_ha_[A-Za-z0-9_-]{43}'''
+keywords = ["wa_ha_"]
