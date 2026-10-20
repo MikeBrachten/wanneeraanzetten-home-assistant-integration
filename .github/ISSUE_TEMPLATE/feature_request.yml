@@ -1,0 +1,12 @@
+name: Feature request
+description: Suggest an improvement to the Home Assistant integration.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like to do?
+      description: Explain the user problem and your proposed behavior.
+    validations:
+      required: true

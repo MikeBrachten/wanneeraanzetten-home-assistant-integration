@@ -1,0 +1,54 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Koppel je account",
+        "description": "Log in bij wanneeraanzetten.nl. Home Assistant bewaart een alleen-lezen token, niet je wachtwoord. Prijzen zijn exclusief belastingen en leverancierskosten.",
+        "data": {
+          "email": "E-mailadres",
+          "password": "Wachtwoord",
+          "country": "Stroommarkt"
+        }
+      },
+      "two_factor": {
+        "title": "Tweestapsverificatie",
+        "description": "Vul je authenticatorcode of een herstelcode in. Is je inlogsessie verlopen? Begin dan opnieuw met koppelen.",
+        "data": {
+          "code": "Verificatiecode",
+          "recovery": "Gebruik een herstelcode"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Inloggen mislukt of verlopen. Controleer je gegevens of begin opnieuw met koppelen.",
+      "cannot_connect": "Geen verbinding met wanneeraanzetten.nl. Probeer het later opnieuw."
+    },
+    "abort": {
+      "already_configured": "Dit account is al gekoppeld.",
+      "wrong_account": "Log in met het account dat oorspronkelijk aan deze integratie is gekoppeld.",
+      "reauth_successful": "Je account is opnieuw gekoppeld."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Stroommarkt",
+        "data": {
+          "country": "Stroommarkt"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "spot_price": {
+        "name": "Spotprijs stroom"
+      }
+    },
+    "binary_sensor": {
+      "recommended_now": {
+        "name": "Nu aanzetten"
+      }
+    }
+  }
+}

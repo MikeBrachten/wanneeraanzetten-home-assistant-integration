@@ -1,0 +1,54 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Link your account",
+        "description": "Sign in to wanneeraanzetten.nl. Home Assistant stores a read-only token, not your password. Prices exclude taxes and supplier fees.",
+        "data": {
+          "email": "Email",
+          "password": "Password",
+          "country": "Electricity market"
+        }
+      },
+      "two_factor": {
+        "title": "Two-step verification",
+        "description": "Enter your authenticator code or a recovery code. If your sign-in has expired, restart account linking.",
+        "data": {
+          "code": "Verification code",
+          "recovery": "Use a recovery code"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Sign-in failed or expired. Check your credentials or restart account linking.",
+      "cannot_connect": "Unable to connect to wanneeraanzetten.nl. Try again later."
+    },
+    "abort": {
+      "already_configured": "This account is already linked.",
+      "wrong_account": "Sign in with the account originally linked to this integration.",
+      "reauth_successful": "Your account has been linked again."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Electricity market",
+        "data": {
+          "country": "Electricity market"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "spot_price": {
+        "name": "Electricity spot price"
+      }
+    },
+    "binary_sensor": {
+      "recommended_now": {
+        "name": "Recommended now"
+      }
+    }
+  }
+}

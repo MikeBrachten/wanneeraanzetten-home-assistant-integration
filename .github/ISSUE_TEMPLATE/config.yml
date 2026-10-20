@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/MikeBrachten/wanneeraanzetten-home-assistant-integration/security/advisories/new
+    about: Report authentication and account security issues privately.
+  - name: Account and electricity planner
+    url: https://wanneeraanzetten.nl/contact/
+    about: Contact the service about account or website questions.
