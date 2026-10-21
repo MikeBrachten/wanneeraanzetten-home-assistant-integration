@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0-beta — 2026-10-21
+
+- Fix the branded price card editor when its configuration is initially empty.
+- Automatically load the card resource for config-entry installations.
+
 ## 0.2.0 — 2026-10-21
 
 - Add an automatically registered, branded Lovelace card with a next-24-hour price graph.
