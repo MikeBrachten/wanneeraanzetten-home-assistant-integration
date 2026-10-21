@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import asyncio
 import math
 from typing import Any
 
@@ -37,7 +36,7 @@ async def _request(
             if not isinstance(result, dict):
                 raise CannotConnect("Invalid service response")
             return result
-    except (ClientError, asyncio.TimeoutError, ValueError) as err:
+    except (ClientError, TimeoutError, ValueError) as err:
         raise CannotConnect("Unable to reach the service") from err
 
 

@@ -33,7 +33,7 @@
     "step": {
       "init": {
         "title": "Stroommarkt",
-        "description": "Gebruik de eigen prijsgrafiek op je dashboard. Beheer je leveranciersopslag en belastingen in je account: https://wanneeraanzetten.nl/?view=settings.",
+        "description": "Gebruik de prijsgrafiek op je dashboard. Beheer de leveranciersopslag en belastingen in je Wanneer Aanzetten-account. Open de link naar de tariefinstellingen vanaf de prijssensor of dashboardkaart.",
         "data": {
           "country": "Stroommarkt"
         }

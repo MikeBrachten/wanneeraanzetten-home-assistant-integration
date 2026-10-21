@@ -33,7 +33,7 @@
     "step": {
       "init": {
         "title": "Electricity market",
-        "description": "Use the branded price graph card on your dashboard. Manage your supplier markup and tax settings in your account at https://wanneeraanzetten.nl/?view=settings.",
+        "description": "Use the branded price graph card on your dashboard. Manage your supplier markup and tax settings in your Wanneer Aanzetten account. Open the tariff settings link from the price sensor or dashboard card.",
         "data": {
           "country": "Electricity market"
         }

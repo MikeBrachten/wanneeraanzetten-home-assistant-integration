@@ -9,12 +9,18 @@ from homeassistant.const import CONF_ACCESS_TOKEN, CONF_EMAIL, CONF_PASSWORD
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.selector import (
-    SelectSelector, SelectSelectorConfig, TextSelector, TextSelectorConfig,
+    SelectSelector,
+    SelectSelectorConfig,
+    TextSelector,
+    TextSelectorConfig,
     TextSelectorType,
 )
 
 from .api import (
-    CannotConnect, InvalidAuth, WanneerAanzettenApi, async_complete_two_factor,
+    CannotConnect,
+    InvalidAuth,
+    WanneerAanzettenApi,
+    async_complete_two_factor,
     async_link,
 )
 from .const import CONF_COUNTRY, COUNTRIES, DOMAIN

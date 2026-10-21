@@ -1,7 +1,7 @@
 """One shared update per account, regardless of the number of devices."""
 
-from datetime import timedelta
 import logging
+from datetime import timedelta
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_ACCESS_TOKEN
