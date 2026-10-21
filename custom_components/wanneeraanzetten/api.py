@@ -94,13 +94,16 @@ class WanneerAanzettenApi:
         self.session = session
         self.token = token
 
-    async def async_state(self, country: str) -> dict[str, Any]:
+    async def async_state(self, country: str, resolution: str | None = None) -> dict[str, Any]:
+        params = {"country": country}
+        if resolution in ("uur", "kwartier"):
+            params["resolution"] = resolution
         result = await _request(
             self.session,
             "GET",
             "home-assistant/state",
             headers={"Authorization": f"Bearer {self.token}"},
-            params={"country": country},
+            params=params,
         )
         try:
             if not isinstance(result["user"]["id"], str):

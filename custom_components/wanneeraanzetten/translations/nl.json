@@ -32,10 +32,29 @@
   "options": {
     "step": {
       "init": {
+        "title": "Energiecontract instellen",
+        "description": "Kies je stroommarkt en stel de prijsintervallen af op je contract. Leverancierskosten en belastingen beheer je in je Wanneer Aanzetten-account.",
+        "menu_options": {
+          "market": "Stroommarkt",
+          "contract": "Prijsinterval"
+        },
+        "menu_option_descriptions": {
+          "market": "Kies de prijsregio voor je woning.",
+          "contract": "Stem de prijzen af op je kwartier- of uurcontract."
+        }
+      },
+      "market": {
         "title": "Stroommarkt",
-        "description": "Gebruik de prijsgrafiek op je dashboard. Beheer de leveranciersopslag en belastingen in je Wanneer Aanzetten-account. Open de link naar de tariefinstellingen vanaf de prijssensor of dashboardkaart.",
+        "description": "Kies de biedzone waarvan je day-ahead-stroomprijzen gebruikt worden.",
         "data": {
           "country": "Stroommarkt"
+        }
+      },
+      "contract": {
+        "title": "Prijsinterval van je contract",
+        "description": "Volg het prijsinterval uit je account of kies een interval voor deze Home Assistant-installatie. Werk leverancierskosten en belastingen bij in je accountinstellingen; de link staat bij de prijssensor en dashboardkaart.",
+        "data": {
+          "price_resolution": "Prijsinterval"
         }
       }
     }
@@ -52,6 +71,15 @@
     "binary_sensor": {
       "recommended_now": {
         "name": "Nu aanzetten"
+      }
+    }
+  },
+  "selector": {
+    "price_resolution": {
+      "options": {
+        "account": "Accountvoorkeur volgen",
+        "kwartier": "Kwartierprijzen",
+        "uur": "Uurprijzen"
       }
     }
   }

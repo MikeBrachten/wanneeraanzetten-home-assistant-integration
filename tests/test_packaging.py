@@ -27,6 +27,7 @@ def test_release_is_deterministic_and_installable():
             assert base + path in names
         manifest = json.loads(bundle.read(base + "manifest.json"))
         assert manifest["domain"] == "wanneeraanzetten"
+        assert "lovelace" in manifest["dependencies"]
         assert all(
             name.startswith(base) or name in {"LICENSE", "NOTICE", "README.md"} for name in names
         )
