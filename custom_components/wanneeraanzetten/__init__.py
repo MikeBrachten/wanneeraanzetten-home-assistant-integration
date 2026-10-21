@@ -7,7 +7,8 @@ from homeassistant.components.frontend import add_extra_js_url
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_ACCESS_TOKEN, Platform
-from homeassistant.core import CoreState, EVENT_HOMEASSISTANT_STARTED, HomeAssistant
+from homeassistant.core import EVENT_HOMEASSISTANT_STARTED, CoreState, HomeAssistant
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import CannotConnect, InvalidAuth, WanneerAanzettenApi
@@ -18,6 +19,7 @@ PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR]
 _LOGGER = logging.getLogger(__name__)
 _CARD_URL = f"/{DOMAIN}/wanneeraanzetten-price-card.js"
 _CARD_VERSION = "0.2.0"
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 
 async def _async_register_card_resource(hass: HomeAssistant) -> None:
@@ -34,7 +36,11 @@ async def _async_register_card_resource(hass: HomeAssistant) -> None:
     # Load the existing collection before writing; this prevents replacing the
     # user's resource list when Home Assistant has deferred its storage load.
     await resources.async_get_info()
-    matches = [item for item in resources.async_items() if item.get("url", "").split("?", 1)[0] == _CARD_URL]
+    matches = [
+        item
+        for item in resources.async_items()
+        if item.get("url", "").split("?", 1)[0] == _CARD_URL
+    ]
     if matches:
         item = matches[0]
         if item.get("url") != url:
@@ -46,9 +52,9 @@ async def _async_register_card_resource(hass: HomeAssistant) -> None:
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     """Serve and register the Lovelace price graph bundled with the HACS integration."""
     frontend_path = Path(__file__).parent / "frontend"
-    await hass.http.async_register_static_paths([
-        StaticPathConfig(f"/{DOMAIN}", str(frontend_path), True)
-    ])
+    await hass.http.async_register_static_paths(
+        [StaticPathConfig(f"/{DOMAIN}", str(frontend_path), True)]
+    )
 
     async def register(_event=None) -> None:
         try:

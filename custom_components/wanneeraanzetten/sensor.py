@@ -11,10 +11,12 @@ from .entity import WanneerAanzettenEntity
 async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
-    async_add_entities([
-        SpotPriceSensor(entry.runtime_data),
-        HouseholdPriceEstimateSensor(entry.runtime_data),
-    ])
+    async_add_entities(
+        [
+            SpotPriceSensor(entry.runtime_data),
+            HouseholdPriceEstimateSensor(entry.runtime_data),
+        ]
+    )
 
 
 class SpotPriceSensor(WanneerAanzettenEntity, SensorEntity):
@@ -103,7 +105,11 @@ class HouseholdPriceEstimateSensor(WanneerAanzettenEntity, SensorEntity):
         price = self.coordinator.data["price"]
         if not price["available"]:
             return None
-        return _all_in(price["value"], self.coordinator.data.get("tariffPreferences") or {}, self.coordinator.country)
+        return _all_in(
+            price["value"],
+            self.coordinator.data.get("tariffPreferences") or {},
+            self.coordinator.country,
+        )
 
     @property
     def extra_state_attributes(self) -> dict:

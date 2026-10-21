@@ -18,7 +18,9 @@ async def async_setup_entry(
 
     @callback
     def discover_devices() -> None:
-        new_devices = [device for device in coordinator.data["devices"] if device["id"] not in known]
+        new_devices = [
+            device for device in coordinator.data["devices"] if device["id"] not in known
+        ]
         known.update(device["id"] for device in new_devices)
         async_add_entities([RecommendedNowSensor(coordinator, device) for device in new_devices])
 
@@ -39,14 +41,18 @@ class RecommendedNowSensor(WanneerAanzettenEntity, BinarySensorEntity):
 
     @property
     def device(self) -> dict:
-        return next((item for item in self.coordinator.data["devices"] if item["id"] == self.device_id), {})
+        return next(
+            (item for item in self.coordinator.data["devices"] if item["id"] == self.device_id), {}
+        )
 
     @property
     def device_info(self) -> DeviceInfo:
         return DeviceInfo(
             identifiers={(DOMAIN, f"{self.coordinator.account_id}_{self.device_id}")},
-            name=self.device.get("name", self.initial_name), manufacturer=NAME,
-            via_device=(DOMAIN, self.coordinator.account_id), configuration_url=BASE_URL,
+            name=self.device.get("name", self.initial_name),
+            manufacturer=NAME,
+            via_device=(DOMAIN, self.coordinator.account_id),
+            configuration_url=BASE_URL,
         )
 
     @property
