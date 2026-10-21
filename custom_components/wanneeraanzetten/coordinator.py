@@ -11,7 +11,7 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import CannotConnect, InvalidAuth, WanneerAanzettenApi
-from .const import CONF_COUNTRY, NAME
+from .const import CONF_COUNTRY, CONF_RESOLUTION, NAME, RESOLUTION_ACCOUNT
 
 LOGGER = logging.getLogger(__name__)
 
@@ -29,11 +29,15 @@ class WanneerAanzettenCoordinator(DataUpdateCoordinator[dict]):
         )
         self.api = WanneerAanzettenApi(async_get_clientsession(hass), entry.data[CONF_ACCESS_TOKEN])
         self.country = entry.options.get(CONF_COUNTRY, entry.data[CONF_COUNTRY])
+        self.price_resolution = entry.options.get(CONF_RESOLUTION, RESOLUTION_ACCOUNT)
         self.account_id = entry.unique_id
 
     async def _async_update_data(self) -> dict:
         try:
-            result = await self.api.async_state(self.country)
+            resolution = (
+                None if self.price_resolution == RESOLUTION_ACCOUNT else self.price_resolution
+            )
+            result = await self.api.async_state(self.country, resolution)
             if result["user"]["id"] != self.account_id:
                 raise ConfigEntryAuthFailed("The linked account has changed")
             return result

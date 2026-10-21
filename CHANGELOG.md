@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0-beta2 — 2026-10-21
+
+- Respect the account’s saved hourly or 15-minute electricity contract interval, with hourly prices when no interval is saved.
+- Add a guided Home Assistant options flow for choosing the market and price interval, with an optional per-installation interval override.
+- Improve dashboard card registration, including delayed Lovelace storage and YAML-managed setups.
+- Fix the branded price card editor when its configuration is initially empty.
+- Add tests for the account interval selection and dashboard-resource setup.
+
 ## 0.2.0-beta — 2026-10-21
 
 - Fix the branded price card editor when its configuration is initially empty.

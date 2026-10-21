@@ -32,10 +32,29 @@
   "options": {
     "step": {
       "init": {
+        "title": "Energy contract setup",
+        "description": "Set the electricity market and choose how price intervals match your contract. Hourly prices are used if no interval is saved. Supplier costs and taxes remain managed in your Wanneer Aanzetten account.",
+        "menu_options": {
+          "market": "Electricity market",
+          "contract": "Price interval"
+        },
+        "menu_option_descriptions": {
+          "market": "Choose the bidding zone for your home.",
+          "contract": "Match your 15-minute or hourly contract."
+        }
+      },
+      "market": {
         "title": "Electricity market",
-        "description": "Use the branded price graph card on your dashboard. Manage your supplier markup and tax settings in your Wanneer Aanzetten account. Open the tariff settings link from the price sensor or dashboard card.",
+        "description": "Choose the bidding zone used for day-ahead electricity prices.",
         "data": {
           "country": "Electricity market"
+        }
+      },
+      "contract": {
+        "title": "Contract price interval",
+        "description": "Follow the price interval saved in your account (hourly if none is saved), or choose an interval for this Home Assistant installation. Update supplier fees and taxes in your account settings; the link is on the price sensor and dashboard card.",
+        "data": {
+          "price_resolution": "Price interval"
         }
       }
     }
@@ -52,6 +71,15 @@
     "binary_sensor": {
       "recommended_now": {
         "name": "Recommended now"
+      }
+    }
+  },
+  "selector": {
+    "price_resolution": {
+      "options": {
+        "account": "Follow account preference",
+        "kwartier": "15-minute prices",
+        "uur": "Hourly prices"
       }
     }
   }

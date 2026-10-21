@@ -5,6 +5,8 @@ NAME = "Wanneer Aanzetten"
 BASE_URL = "https://wanneeraanzetten.nl"
 SETTINGS_URL = "https://wanneeraanzetten.nl/?view=settings"
 CONF_COUNTRY = "country"
+CONF_RESOLUTION = "price_resolution"
+RESOLUTION_ACCOUNT = "account"
 COUNTRIES = [
     "NL",
     "BE",

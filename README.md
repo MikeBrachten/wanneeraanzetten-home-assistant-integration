@@ -51,6 +51,7 @@ Or add it manually:
 5. Find **Wanneer Aanzetten**, download the latest release, and restart Home Assistant.
 6. Open **Settings → Devices & services → Add integration → Wanneer Aanzetten**.
 7. Sign in, choose your electricity market, and complete two-step verification if enabled.
+8. Open the integration options and choose **Electricity market** or **Price interval**. The default follows the interval saved in your account, using hourly prices if no interval is saved; you can override it for this Home Assistant installation. Set supplier fees and taxes in your signed-in account, then use the tariff-settings link on the price sensor or graph.
 
 [![Open the integration setup in Home Assistant](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=wanneeraanzetten)
 

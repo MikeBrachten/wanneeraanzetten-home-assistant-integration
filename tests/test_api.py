@@ -26,6 +26,7 @@ async def backend(aiohttp_server, socket_enabled):
     service = web.Application()
     sessions = {}
     tokens = {}
+    state_requests = []
     counter = 0
 
     async def login(request):
@@ -65,6 +66,7 @@ async def backend(aiohttp_server, socket_enabled):
         return web.Response(status=204)
 
     async def state(request):
+        state_requests.append(dict(request.query))
         user_id = tokens.get(request.headers.get("Authorization", "").removeprefix("Bearer "))
         if not user_id:
             return web.json_response({}, status=401)
@@ -90,7 +92,7 @@ async def backend(aiohttp_server, socket_enabled):
     server = await aiohttp_server(service)
     url = str(server.make_url("/")).rstrip("/").replace("127.0.0.1", "localhost")
     with patch("custom_components.wanneeraanzetten.api.BASE_URL", url):
-        yield {"url": url, "code": "123456"}
+        yield {"url": url, "code": "123456", "state_requests": state_requests}
 
 
 async def test_real_login_cookie_exchange_snapshot_and_revoke(backend):
@@ -103,6 +105,8 @@ async def test_real_login_cookie_exchange_snapshot_and_revoke(backend):
         assert state["price"]["value"] == -0.02
         assert state["devices"][0]["recommendedNow"] is True
         assert len(state["devices"]) == 1
+        await client.async_state("NL", "uur")
+        assert backend["state_requests"][-1] == {"country": "NL", "resolution": "uur"}
         # Login cookies never entered the polling session.
         assert len(session.cookie_jar) == 0
         await client.async_revoke()

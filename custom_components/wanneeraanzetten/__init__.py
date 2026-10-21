@@ -1,5 +1,6 @@
 """Wanneer Aanzetten electricity prices and appliance recommendations."""
 
+import asyncio
 import logging
 from pathlib import Path
 
@@ -22,16 +23,29 @@ _CARD_VERSION = "0.2.0"
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 
-async def _async_register_card_resource(hass: HomeAssistant) -> None:
-    """Make the bundled branded Lovelace card available after frontend startup."""
+async def _async_register_card_resource(hass: HomeAssistant) -> bool:
+    """Register the card in Lovelace storage, or use the YAML-mode fallback."""
     url = f"{_CARD_URL}?v={_CARD_VERSION}"
     lovelace = hass.data.get("lovelace")
+    if lovelace is None:
+        return False
+    resource_mode = (
+        lovelace.get("resource_mode")
+        if isinstance(lovelace, dict)
+        else getattr(lovelace, "resource_mode", None)
+    )
+    if resource_mode == "yaml":
+        add_extra_js_url(hass, url)
+        _LOGGER.info(
+            "Lovelace resources are YAML-managed; the Wanneer Aanzetten card "
+            "script is loaded globally and cannot appear in the Resources list"
+        )
+        return True
     resources = getattr(lovelace, "resources", None) if lovelace else None
     if resources is None and isinstance(lovelace, dict):
         resources = lovelace.get("resources")
     if resources is None or not hasattr(resources, "async_create_item"):
-        add_extra_js_url(hass, url)
-        return
+        return False
 
     # Load the existing collection before writing; this prevents replacing the
     # user's resource list when Home Assistant has deferred its storage load.
@@ -45,8 +59,9 @@ async def _async_register_card_resource(hass: HomeAssistant) -> None:
         item = matches[0]
         if item.get("url") != url:
             await resources.async_update_item(item["id"], {"res_type": "module", "url": url})
-        return
+        return True
     await resources.async_create_item({"res_type": "module", "url": url})
+    return True
 
 
 async def _async_setup_frontend(hass: HomeAssistant) -> None:
@@ -62,15 +77,35 @@ async def _async_setup_frontend(hass: HomeAssistant) -> None:
     hass.data[setup_key] = True
 
     async def register(_event=None) -> None:
-        try:
-            await _async_register_card_resource(hass)
-        except Exception:
-            # The card is optional; sensor setup must still work if resource
-            # storage is unavailable (for example, YAML-managed Lovelace).
-            _LOGGER.exception("Unable to register the %s dashboard card", NAME)
+        last_error = None
+        for attempt in range(5):
+            try:
+                if await _async_register_card_resource(hass):
+                    return
+            except Exception as err:  # Storage may still be initializing.
+                last_error = err
+            if attempt < 4:
+                await asyncio.sleep(1)
+
+        # Keep the card usable while making the missing Resources entry visible
+        # in logs. This should only be reached if Lovelace storage never became
+        # writable; the integration itself remains available.
+        add_extra_js_url(hass, f"{_CARD_URL}?v={_CARD_VERSION}")
+        if last_error:
+            _LOGGER.warning(
+                "Unable to add the %s dashboard card to Lovelace Resources after retries: %s",
+                NAME,
+                last_error,
+            )
+        else:
+            _LOGGER.warning(
+                "Lovelace storage resources did not become available; the %s card "
+                "script was loaded globally but is not listed in Resources",
+                NAME,
+            )
 
     if hass.state is CoreState.running:
-        await register()
+        hass.async_create_task(register())
     else:
         hass.bus.async_listen_once(
             EVENT_HOMEASSISTANT_STARTED,

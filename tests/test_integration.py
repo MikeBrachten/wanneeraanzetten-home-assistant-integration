@@ -1,7 +1,8 @@
 """Account setup and real Home Assistant entity lifecycle tests."""
 
 from copy import deepcopy
-from unittest.mock import patch
+from types import SimpleNamespace
+from unittest.mock import AsyncMock, patch
 
 import pytest
 from homeassistant import config_entries
@@ -9,8 +10,9 @@ from homeassistant.const import CONF_ACCESS_TOKEN, CONF_EMAIL, CONF_PASSWORD
 from homeassistant.data_entry_flow import FlowResultType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
+from custom_components.wanneeraanzetten import _async_register_card_resource
 from custom_components.wanneeraanzetten.api import CannotConnect, InvalidAuth
-from custom_components.wanneeraanzetten.const import CONF_COUNTRY, DOMAIN
+from custom_components.wanneeraanzetten.const import CONF_COUNTRY, CONF_RESOLUTION, DOMAIN
 
 LINK = {"token": "wa_ha_test", "user": {"id": "usr_1", "email": "ha@example.nl"}}
 DATA = {CONF_ACCESS_TOKEN: LINK["token"], CONF_EMAIL: "ha@example.nl", CONF_COUNTRY: "NL"}
@@ -238,12 +240,58 @@ async def test_removal_revokes_token(hass, mock_api):
         revoke.assert_awaited_once()
 
 
-async def test_options_change_country(hass, mock_api):
+async def test_energy_contract_options_wizard(hass, mock_api):
     entry = await setup_entry(hass)
+
     result = await hass.config_entries.options.async_init(entry.entry_id)
+    assert result["step_id"] == "init"
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {"next_step_id": "market"}
+    )
+    assert result["step_id"] == "market"
     result = await hass.config_entries.options.async_configure(
         result["flow_id"], {CONF_COUNTRY: "BE"}
     )
     assert result["type"] == FlowResultType.CREATE_ENTRY
     await hass.async_block_till_done()
     assert entry.runtime_data.country == "BE"
+
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {"next_step_id": "contract"}
+    )
+    assert result["step_id"] == "contract"
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {CONF_RESOLUTION: "uur"}
+    )
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    await hass.async_block_till_done()
+    assert entry.runtime_data.price_resolution == "uur"
+    mock_api.async_state.assert_awaited_with("BE", "uur")
+
+
+async def test_card_resource_is_added_to_lovelace_storage(hass):
+    resources = SimpleNamespace(
+        async_get_info=AsyncMock(),
+        async_items=lambda: [],
+        async_create_item=AsyncMock(),
+    )
+    hass.data["lovelace"] = SimpleNamespace(resource_mode="storage", resources=resources)
+
+    assert await _async_register_card_resource(hass)
+    resources.async_get_info.assert_awaited_once()
+    resources.async_create_item.assert_awaited_once_with(
+        {
+            "res_type": "module",
+            "url": "/wanneeraanzetten/wanneeraanzetten-price-card.js?v=0.2.0",
+        }
+    )
+
+
+async def test_yaml_managed_lovelace_uses_global_card_script(hass):
+    hass.data["lovelace"] = SimpleNamespace(resource_mode="yaml", resources=None)
+    with patch("custom_components.wanneeraanzetten.add_extra_js_url") as add_extra_js_url:
+        assert await _async_register_card_resource(hass)
+    add_extra_js_url.assert_called_once_with(
+        hass, "/wanneeraanzetten/wanneeraanzetten-price-card.js?v=0.2.0"
+    )

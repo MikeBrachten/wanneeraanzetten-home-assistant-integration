@@ -22,7 +22,13 @@ from .api import (
     async_complete_two_factor,
     async_link,
 )
-from .const import CONF_COUNTRY, COUNTRIES, DOMAIN
+from .const import (
+    CONF_COUNTRY,
+    CONF_RESOLUTION,
+    COUNTRIES,
+    DOMAIN,
+    RESOLUTION_ACCOUNT,
+)
 
 
 class WanneerAanzettenConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -132,13 +138,17 @@ class WanneerAanzettenConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class WanneerAanzettenOptionsFlow(config_entries.OptionsFlow):
-    """The website stores country preferences in the browser, so choose locally."""
+    """Guide users through market and contract-price settings."""
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None):
+        return self.async_show_menu(step_id="init", menu_options=["market", "contract"])
+
+    async def async_step_market(self, user_input: dict[str, Any] | None = None):
         if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
+            options = {**self.config_entry.options, **user_input}
+            return self.async_create_entry(title="", data=options)
         return self.async_show_form(
-            step_id="init",
+            step_id="market",
             data_schema=vol.Schema(
                 {
                     vol.Required(
@@ -147,6 +157,27 @@ class WanneerAanzettenOptionsFlow(config_entries.OptionsFlow):
                             CONF_COUNTRY, self.config_entry.data[CONF_COUNTRY]
                         ),
                     ): SelectSelector(SelectSelectorConfig(options=COUNTRIES)),
+                }
+            ),
+        )
+
+    async def async_step_contract(self, user_input: dict[str, Any] | None = None):
+        if user_input is not None:
+            options = {**self.config_entry.options, **user_input}
+            return self.async_create_entry(title="", data=options)
+        return self.async_show_form(
+            step_id="contract",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_RESOLUTION,
+                        default=self.config_entry.options.get(CONF_RESOLUTION, RESOLUTION_ACCOUNT),
+                    ): SelectSelector(
+                        SelectSelectorConfig(
+                            options=[RESOLUTION_ACCOUNT, "kwartier", "uur"],
+                            translation_key="price_resolution",
+                        )
+                    ),
                 }
             ),
         )
