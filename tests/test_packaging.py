@@ -22,6 +22,7 @@ def test_release_is_deterministic_and_installable():
             "translations/en.json",
             "translations/nl.json",
             "brand/icon.png",
+            "frontend/wanneeraanzetten-price-card.js",
         ]:
             assert base + path in names
         manifest = json.loads(bundle.read(base + "manifest.json"))

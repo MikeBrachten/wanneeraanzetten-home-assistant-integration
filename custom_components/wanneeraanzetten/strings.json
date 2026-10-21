@@ -33,6 +33,7 @@
     "step": {
       "init": {
         "title": "Electricity market",
+        "description": "Use the branded price graph card on your dashboard. Manage your supplier markup and tax settings in your account at https://wanneeraanzetten.nl/?view=settings.",
         "data": {
           "country": "Electricity market"
         }
@@ -43,6 +44,9 @@
     "sensor": {
       "spot_price": {
         "name": "Electricity spot price"
+      },
+      "household_price_estimate": {
+        "name": "Estimated household price"
       }
     },
     "binary_sensor": {

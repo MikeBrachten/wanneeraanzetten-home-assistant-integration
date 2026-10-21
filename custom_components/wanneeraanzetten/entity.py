@@ -3,7 +3,7 @@
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import BASE_URL, DOMAIN, NAME
+from .const import DOMAIN, NAME, SETTINGS_URL
 from .coordinator import WanneerAanzettenCoordinator
 
 
@@ -19,5 +19,5 @@ class WanneerAanzettenEntity(CoordinatorEntity[WanneerAanzettenCoordinator]):
             name=NAME,
             manufacturer=NAME,
             entry_type=DeviceEntryType.SERVICE,
-            configuration_url=BASE_URL,
+            configuration_url=SETTINGS_URL,
         )

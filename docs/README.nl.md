@@ -2,7 +2,8 @@
 
 Gebruik **wanneeraanzetten.nl in Home Assistant**: bekijk actuele dynamische stroomprijzen en
 ontvang per opgeslagen apparaat een aan/uit-advies voor het goedkoopste beschikbare startmoment.
-Koppel je account en gebruik de sensoren in je dashboard of automatiseringen.
+Koppel je account, bekijk de eigen prijsgrafiek met logo en gebruik prijs- en apparaatsensoren in
+je dashboard of automatiseringen.
 
 ## Installeren via HACS
 
@@ -29,6 +30,7 @@ Dit is een aangepaste HACS-repository. De integratie staat niet standaard in de 
 | Sensor | Betekenis |
 | --- | --- |
 | Spotprijs stroom | Actuele beursprijs in EUR/kWh, exclusief energiebelasting, btw en leverancierskosten |
+| Geschatte all-in prijs | Geschatte variabele prijs per kWh met de tarieven uit je account; vaste kosten tellen niet mee |
 | Apparaat: Nu aanzetten | Aan wanneer nu starten het goedkoopste beschikbare moment binnen je opgeslagen uitstelinstellingen is |
 
 **Aan is een planningsadvies, geen meting dat je wasmachine, vaatwasser of ander apparaat draait.**
@@ -39,6 +41,23 @@ De aanbeveling houdt rekening met looptijd, maximaal uitstel en de gekozen stapp
 einduitstel. De planner vergelijkt vandaag en morgen zodra prijzen beschikbaar zijn. Elke minuut
 wordt het advies opnieuw berekend en worden nieuwe apparaten automatisch ontdekt.
 
+## Eigen prijsgrafiek op je dashboard
+
+Na installatie registreert Home Assistant de kaart automatisch. Kies **Wanneer Aanzetten · Prijsgrafiek**
+bij **Kaart toevoegen**. De grafiek toont het prijsverloop voor de komende 24 uur, markeert de huidige
+periode en gebruikt je opgeslagen Nederlandse tariefinstellingen voor een all-in schatting. Zonder
+volledige tariefinstellingen toont de kaart de spotprijs en een rechtstreekse link naar de instellingen.
+
+Je kunt de kaart ook met YAML toevoegen. Vervang de entiteit door de spotprijssensor in jouw Home Assistant:
+
+```yaml
+type: custom:wanneeraanzetten-price-card
+entity: sensor.jouw_spotprijssensor
+```
+
+Je website-instellingen synchroniseren met je account zodra je bent ingelogd. Home Assistant gebruikt
+dezelfde instellingen voor de geschatte all-in-prijssensor. Vaste maand- of dagkosten zijn niet inbegrepen.
+
 ## Begin met je apparaten
 
 - [Bekijk stroomprijzen vandaag](https://wanneeraanzetten.nl/stroomprijzen-vandaag/).
@@ -48,7 +67,8 @@ wordt het advies opnieuw berekend en worden nieuwe apparaten automatisch ontdekt
 
 Je wachtwoord wordt niet bewaard. Home Assistant bewaart een alleen-lezen toegangstoken dat na een
 jaar verloopt. Bij verlopen of ingetrokken toegang vraagt Home Assistant je opnieuw in te loggen.
-Wijzig je stroommarkt via **Configureren** bij de integratie.
+Wijzig je stroommarkt via **Configureren** bij de integratie. Beheer leveranciersopslag, energiebelasting
+en btw op [de tariefinstellingen van je account](https://wanneeraanzetten.nl/?view=settings).
 
 Bekijk de [Engelse handleiding en automatisering](../README.md),
 [probleemoplossing](troubleshooting.md) en [privacy-uitleg](security-and-privacy.md).

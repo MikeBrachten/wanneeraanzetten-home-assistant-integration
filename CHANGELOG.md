@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 — 2026-10-21
+
+- Add an automatically registered, branded Lovelace card with a next-24-hour price graph.
+- Add an estimated household price sensor based on saved Dutch tariff settings; fixed fees are excluded.
+- Sync signed-in tariff settings through the account API and expose them to read-only Home Assistant links.
+- Add direct tariff settings links and setup guidance in the integration and dashboard card.
+- Include the bundled card in the HACS manual-install release archive.
+
 ## 0.1.1 — 2026-10-20
 
 - Lower the minimum Home Assistant version to 2025.1.3 after full runtime testing.

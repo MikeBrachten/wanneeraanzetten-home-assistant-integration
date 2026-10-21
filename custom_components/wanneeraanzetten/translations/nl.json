@@ -33,6 +33,7 @@
     "step": {
       "init": {
         "title": "Stroommarkt",
+        "description": "Gebruik de eigen prijsgrafiek op je dashboard. Beheer je leveranciersopslag en belastingen in je account: https://wanneeraanzetten.nl/?view=settings.",
         "data": {
           "country": "Stroommarkt"
         }
@@ -43,6 +44,9 @@
     "sensor": {
       "spot_price": {
         "name": "Spotprijs stroom"
+      },
+      "household_price_estimate": {
+        "name": "Geschatte all-in prijs"
       }
     },
     "binary_sensor": {

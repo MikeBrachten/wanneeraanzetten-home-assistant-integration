@@ -36,6 +36,12 @@ STATE = {
         "start": "2026-10-20T10:00:00Z",
         "end": "2026-10-20T11:00:00Z",
     },
+    "tariffPreferences": {
+        "country": "NL", "supplier": "custom", "inkoop": 0.02, "eb": 0.09161, "btw": 21
+    },
+    "prices": [
+        {"start": "2026-10-20T10:00:00Z", "end": "2026-10-20T11:00:00Z", "value": -0.02}
+    ],
     "devices": [DEVICE],
 }
 INPUT = {CONF_EMAIL: "ha@example.nl", CONF_PASSWORD: "a password", CONF_COUNTRY: "NL"}
@@ -130,10 +136,15 @@ async def test_entities_and_discovery(hass, mock_api):
     entry = await setup_entry(hass)
     sensors = hass.states.async_all("sensor")
     binaries = hass.states.async_all("binary_sensor")
-    assert len(sensors) == len(binaries) == 1
-    assert sensors[0].state == "-0.02"
-    assert sensors[0].attributes["unit_of_measurement"] == "EUR/kWh"
-    assert sensors[0].attributes["includes_tax"] is False
+    assert len(sensors) == 2 and len(binaries) == 1
+    spot = next(sensor for sensor in sensors if sensor.attributes.get("includes_tax") is False)
+    household = next(sensor for sensor in sensors if sensor.attributes.get("estimated") is True)
+    assert spot.state == "-0.02"
+    assert spot.attributes["unit_of_measurement"] == "EUR/kWh"
+    assert spot.attributes["prices"][0]["estimated_all_in"] == pytest.approx(0.110848)
+    assert spot.attributes["tariff_settings_url"].endswith("?view=settings")
+    assert household.state == "0.110848"
+    assert household.attributes["fixed_fees_included"] is False
     assert binaries[0].state == "on"
 
     updated = deepcopy(STATE)
@@ -150,7 +161,7 @@ async def test_entities_and_discovery(hass, mock_api):
     entry.runtime_data.async_set_updated_data(updated)
     await hass.async_block_till_done()
     assert hass.states.get(binaries[0].entity_id).state == "unavailable"
-    assert hass.states.get(sensors[0].entity_id).state == "unavailable"
+    assert all(hass.states.get(sensor.entity_id).state == "unavailable" for sensor in sensors)
     assert await hass.config_entries.async_unload(entry.entry_id)
 
 
@@ -169,11 +180,11 @@ async def test_transient_failure_marks_unavailable_and_recovers(hass, mock_api):
     mock_api.async_state.side_effect = CannotConnect
     await entry.runtime_data.async_refresh()
     await hass.async_block_till_done()
-    assert hass.states.async_all("sensor")[0].state == "unavailable"
+    assert all(sensor.state == "unavailable" for sensor in hass.states.async_all("sensor"))
     mock_api.async_state.side_effect = None
     await entry.runtime_data.async_refresh()
     await hass.async_block_till_done()
-    assert hass.states.async_all("sensor")[0].state == "-0.02"
+    assert any(sensor.state == "-0.02" for sensor in hass.states.async_all("sensor"))
 
 
 async def test_reauthentication_replaces_token(hass, mock_api):

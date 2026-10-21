@@ -1,4 +1,4 @@
-"""Build a deterministic, self-contained manual-install archive and its checksum."""
+"""Build a deterministic integration archive, including its bundled dashboard card."""
 
 import json
 import zipfile
@@ -19,7 +19,7 @@ def build_release() -> Path:
         for path in sorted(COMPONENT.rglob("*")):
             if not path.is_file() or path.suffix == ".pyc" or "__pycache__" in path.parts:
                 continue
-            if path.suffix not in {".py", ".json", ".png"}:
+            if path.suffix not in {".py", ".json", ".png", ".js"}:
                 raise ValueError(f"Unexpected component file: {path.relative_to(ROOT)}")
             info = zipfile.ZipInfo(path.relative_to(ROOT).as_posix(), (2026, 1, 1, 0, 0, 0))
             info.compress_type = zipfile.ZIP_DEFLATED

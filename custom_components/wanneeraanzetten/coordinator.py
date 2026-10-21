@@ -1,7 +1,7 @@
 """One shared update per account, regardless of the number of devices."""
 
-import logging
 from datetime import timedelta
+import logging
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_ACCESS_TOKEN
@@ -21,13 +21,12 @@ class WanneerAanzettenCoordinator(DataUpdateCoordinator[dict]):
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
         super().__init__(
-            hass,
-            LOGGER,
-            name=NAME,
-            config_entry=entry,
+            hass, LOGGER, name=NAME, config_entry=entry,
             update_interval=timedelta(minutes=1),
         )
-        self.api = WanneerAanzettenApi(async_get_clientsession(hass), entry.data[CONF_ACCESS_TOKEN])
+        self.api = WanneerAanzettenApi(
+            async_get_clientsession(hass), entry.data[CONF_ACCESS_TOKEN]
+        )
         self.country = entry.options.get(CONF_COUNTRY, entry.data[CONF_COUNTRY])
         self.account_id = entry.unique_id
 

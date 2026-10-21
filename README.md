@@ -2,7 +2,7 @@
 
 # Wanneer Aanzetten — Home Assistant integration for dynamic electricity prices
 
-Bring **[wanneeraanzetten.nl](https://wanneeraanzetten.nl/)** into Home Assistant. See the current electricity spot price and get an **on/off recommendation for when to run each appliance** saved to your account. Install this custom integration through **HACS** and use its sensors in your dashboards and automations.
+Bring **[wanneeraanzetten.nl](https://wanneeraanzetten.nl/)** into Home Assistant. See a branded **day-ahead electricity price graph**, an estimated all-in price based on your saved contract settings, and an **on/off recommendation for when to run each appliance**. Install this custom integration through **HACS** and use its card, sensors, and automation-ready entities in your dashboards.
 
 [![HACS custom integration](https://img.shields.io/badge/HACS-Custom%20integration-41BDF5?logo=homeassistant&logoColor=white)](https://my.home-assistant.io/redirect/hacs_repository/?owner=MikeBrachten&repository=wanneeraanzetten-home-assistant-integration&category=integration)
 [![CI](https://github.com/MikeBrachten/wanneeraanzetten-home-assistant-integration/actions/workflows/ci.yml/badge.svg)](https://github.com/MikeBrachten/wanneeraanzetten-home-assistant-integration/actions/workflows/ci.yml)
@@ -15,6 +15,8 @@ Bring **[wanneeraanzetten.nl](https://wanneeraanzetten.nl/)** into Home Assistan
 
 - **Account linking:** sign in with your existing Wanneer Aanzetten account, including authenticator or recovery-code verification.
 - **Current electricity prices:** display the active day-ahead spot price in **EUR/kWh**, including negative prices. Taxes, VAT, and supplier fees are excluded.
+- **Branded dashboard graph:** an automatically registered HACS card displays up to 24 hours of spot prices, uses your saved Dutch tariff to show an estimated all-in price, and links directly to tariff settings.
+- **Cloud-synced tariff settings:** change your variable supplier markup, energy tax, VAT, and market in your signed-in website account and use those values in Home Assistant.
 - **Appliance recommendations:** a binary sensor for each synced washing machine, dishwasher, dryer, EV charging plan, or other saved device.
 - **Automatic discovery:** devices added to your online account appear on the next update; one shared poll runs every minute.
 - **Automation-ready data:** inspect the recommended start/end, appliance duration, and average spot price for the selected window.
@@ -74,13 +76,29 @@ Restart Home Assistant and follow steps 6–7 above. Manual installations must b
 | Entity | What it tells you | Useful attributes |
 | --- | --- | --- |
 | Electricity spot price | Current price in EUR/kWh, excluding taxes and supplier markup | Market, data source, price-period start/end, tax exclusions |
+| Estimated household price | Current Dutch marginal price calculated from the spot price and saved tariff settings | Supplier, formula, fixed-fee exclusion, tariff-settings link |
 | Appliance: Recommended now | Whether now is the cheapest valid start within the saved delay settings | Best start/end, duration in minutes, average spot price |
+
+The integration also exposes today’s and tomorrow’s available price slots on the spot-price
+sensor. Its dashboard card plots the next 24 hours in the Wanneer Aanzetten brand, highlights
+the current period, and marks missing price data instead of drawing it as a zero price. Home
+Assistant automatically registers the card after the integration is installed; after a restart,
+search for **Wanneer Aanzetten · Prijsgrafiek** under **Add card**. The card is available in
+Dutch and English and follows your Home Assistant theme.
+
+You can add the card from the visual card picker, or use YAML and replace the entity ID with your
+spot-price sensor:
+
+```yaml
+type: custom:wanneeraanzetten-price-card
+entity: sensor.your_electricity_spot_price
+```
 
 Each appliance is registered as its own Home Assistant device. Entity IDs depend on your language, appliance names, and existing entities. Deleted account devices become unavailable so automations do not silently switch targets.
 
 The planner compares available prices for today and tomorrow, when published. It uses your saved appliance duration, maximum delay, delay step, and start/end delay mode. Equal-price options favor the earliest start. Plans recalculate at each poll; they are not fixed run reservations.
 
-Price-period lengths follow the upstream data, including quarter-hour prices and hourly fallback. Dutch delivery dates use Europe/Amsterdam time, including daylight saving time. Your electricity market is configured in Home Assistant because the website stores its market preferences in your browser.
+Price-period lengths follow the upstream data, including quarter-hour prices and hourly fallback. Dutch delivery dates use Europe/Amsterdam time, including daylight saving time. Choose the electricity market in Home Assistant. When you sign in to wanneeraanzetten.nl, your tariff settings sync to your account and are shared with linked Home Assistant installations.
 
 ## Example: get a notification when your washing machine is recommended
 
@@ -119,7 +137,7 @@ De [Nederlandse handleiding](docs/README.nl.md) legt uit hoe je dynamische stroo
 
 ### Does the electricity sensor show my all-in household tariff?
 
-No. It reports the electricity **spot price**, excluding energy tax, VAT, and supplier markup. The website may show an all-in estimate using your browser's tariff settings. Compare the same market, period, and price definition.
+The spot-price sensor reports the market price, excluding energy tax, VAT, and supplier markup. A separate **Estimated household price** sensor and the branded graph use your account's Dutch tariff settings to estimate the variable price per kWh. Fixed daily or monthly fees are excluded, and the result is an estimate based on the values you save in [tariff settings](https://wanneeraanzetten.nl/?view=settings).
 
 ### Does “on” mean my appliance is running?
 

@@ -21,12 +21,19 @@ at-rest encryption or an external credential vault.
 ## Data read by the integration
 
 The API returns your account identity, current spot-price metadata, and saved devices with their
-names, icons, run durations, and current planning recommendations. Polling runs once a minute per
-linked account. This is a cloud connection, not a local appliance protocol.
+names, icons, run durations, and current planning recommendations. It also returns the available
+today/tomorrow price slots and the tariff preferences saved on your account. Polling runs once a
+minute per linked account. This is a cloud connection, not a local appliance protocol.
+
+When you are signed in to the website, tariff preferences such as supplier markup, energy tax,
+VAT, market, and display options sync to your account so they can be used by linked installations.
+These values are used to calculate an estimated variable household price; fixed fees are not
+included. Manage or change them at [wanneeraanzetten.nl tariff settings](https://wanneeraanzetten.nl/?view=settings).
 
 A scoped token can read only its account's integration snapshot and revoke itself. It cannot edit
-devices, access billing, change your password, or mint additional tokens. No physical device state
-is read, and no appliance is controlled by this component.
+tariff preferences or devices, access billing, change your password, or mint additional tokens.
+Tariff settings are changed only through a normal signed-in website session. No physical device
+state is read, and no appliance is controlled by this component.
 
 ## Revoking access
 
