@@ -49,19 +49,24 @@ async def _async_register_card_resource(hass: HomeAssistant) -> None:
     await resources.async_create_item({"res_type": "module", "url": url})
 
 
-async def async_setup(hass: HomeAssistant, config: dict) -> bool:
-    """Serve and register the Lovelace price graph bundled with the HACS integration."""
+async def _async_setup_frontend(hass: HomeAssistant) -> None:
+    """Serve and auto-load the dashboard card once the integration is configured."""
+    setup_key = f"{DOMAIN}_frontend_setup"
+    if hass.data.get(setup_key):
+        return
+
     frontend_path = Path(__file__).parent / "frontend"
     await hass.http.async_register_static_paths(
         [StaticPathConfig(f"/{DOMAIN}", str(frontend_path), True)]
     )
+    hass.data[setup_key] = True
 
     async def register(_event=None) -> None:
         try:
             await _async_register_card_resource(hass)
         except Exception:
-            # A custom dashboard card is an optional enhancement; sensor setup
-            # must stay available even if a user's dashboard is YAML-managed.
+            # The card is optional; sensor setup must still work if resource
+            # storage is unavailable (for example, YAML-managed Lovelace).
             _LOGGER.exception("Unable to register the %s dashboard card", NAME)
 
     if hass.state is CoreState.running:
@@ -71,11 +76,17 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
             EVENT_HOMEASSISTANT_STARTED,
             lambda event: hass.async_create_task(register(event)),
         )
+
+
+async def async_setup(hass: HomeAssistant, config: dict) -> bool:
+    """Support YAML setup while config-entry setup calls this too."""
+    await _async_setup_frontend(hass)
     return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Validate the connection before adding entities."""
+    await _async_setup_frontend(hass)
     coordinator = WanneerAanzettenCoordinator(hass, entry)
     await coordinator.async_config_entry_first_refresh()
     entry.runtime_data = coordinator
