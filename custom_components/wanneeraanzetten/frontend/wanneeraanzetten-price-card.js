@@ -153,7 +153,7 @@ class WanneerAanzettenPriceCardEditor extends HTMLElement {
     picker.hass = this._hass;
     picker.includeDomains = ["sensor"];
     picker.allowCustomEntity = false;
-    picker.value = this.config.entity || "";
+    picker.value = this.config?.entity || "";
     picker.addEventListener("value-changed", (event) => {
       if (!event.detail?.value) return;
       this.config = { ...this.config, entity: event.detail.value };
