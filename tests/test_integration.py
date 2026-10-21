@@ -37,11 +37,13 @@ STATE = {
         "end": "2026-10-20T11:00:00Z",
     },
     "tariffPreferences": {
-        "country": "NL", "supplier": "custom", "inkoop": 0.02, "eb": 0.09161, "btw": 21
+        "country": "NL",
+        "supplier": "custom",
+        "inkoop": 0.02,
+        "eb": 0.09161,
+        "btw": 21,
     },
-    "prices": [
-        {"start": "2026-10-20T10:00:00Z", "end": "2026-10-20T11:00:00Z", "value": -0.02}
-    ],
+    "prices": [{"start": "2026-10-20T10:00:00Z", "end": "2026-10-20T11:00:00Z", "value": -0.02}],
     "devices": [DEVICE],
 }
 INPUT = {CONF_EMAIL: "ha@example.nl", CONF_PASSWORD: "a password", CONF_COUNTRY: "NL"}

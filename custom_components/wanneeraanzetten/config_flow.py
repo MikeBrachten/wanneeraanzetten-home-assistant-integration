@@ -51,18 +51,21 @@ class WanneerAanzettenConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except CannotConnect:
                 errors["base"] = "cannot_connect"
         return self.async_show_form(
-            step_id="user", errors=errors,
-            data_schema=vol.Schema({
-                vol.Required(CONF_EMAIL, default=self._email): TextSelector(
-                    TextSelectorConfig(type=TextSelectorType.EMAIL)
-                ),
-                vol.Required(CONF_PASSWORD): TextSelector(
-                    TextSelectorConfig(type=TextSelectorType.PASSWORD)
-                ),
-                vol.Required(CONF_COUNTRY, default=self._country): SelectSelector(
-                    SelectSelectorConfig(options=COUNTRIES)
-                ),
-            }),
+            step_id="user",
+            errors=errors,
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_EMAIL, default=self._email): TextSelector(
+                        TextSelectorConfig(type=TextSelectorType.EMAIL)
+                    ),
+                    vol.Required(CONF_PASSWORD): TextSelector(
+                        TextSelectorConfig(type=TextSelectorType.PASSWORD)
+                    ),
+                    vol.Required(CONF_COUNTRY, default=self._country): SelectSelector(
+                        SelectSelectorConfig(options=COUNTRIES)
+                    ),
+                }
+            ),
         )
 
     async def async_step_two_factor(self, user_input: dict[str, Any] | None = None):
@@ -79,11 +82,14 @@ class WanneerAanzettenConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except CannotConnect:
                 errors["base"] = "cannot_connect"
         return self.async_show_form(
-            step_id="two_factor", errors=errors,
-            data_schema=vol.Schema({
-                vol.Required("code"): str,
-                vol.Required("recovery", default=False): bool,
-            }),
+            step_id="two_factor",
+            errors=errors,
+            data_schema=vol.Schema(
+                {
+                    vol.Required("code"): str,
+                    vol.Required("recovery", default=False): bool,
+                }
+            ),
         )
 
     async def _async_revoke(self, token: str) -> None:
@@ -132,9 +138,15 @@ class WanneerAanzettenOptionsFlow(config_entries.OptionsFlow):
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
         return self.async_show_form(
-            step_id="init", data_schema=vol.Schema({
-                vol.Required(CONF_COUNTRY, default=self.config_entry.options.get(
-                    CONF_COUNTRY, self.config_entry.data[CONF_COUNTRY]
-                )): SelectSelector(SelectSelectorConfig(options=COUNTRIES)),
-            }),
+            step_id="init",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_COUNTRY,
+                        default=self.config_entry.options.get(
+                            CONF_COUNTRY, self.config_entry.data[CONF_COUNTRY]
+                        ),
+                    ): SelectSelector(SelectSelectorConfig(options=COUNTRIES)),
+                }
+            ),
         )

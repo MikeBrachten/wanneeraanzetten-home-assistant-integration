@@ -36,7 +36,11 @@ async def _async_register_card_resource(hass: HomeAssistant) -> None:
     # Load the existing collection before writing; this prevents replacing the
     # user's resource list when Home Assistant has deferred its storage load.
     await resources.async_get_info()
-    matches = [item for item in resources.async_items() if item.get("url", "").split("?", 1)[0] == _CARD_URL]
+    matches = [
+        item
+        for item in resources.async_items()
+        if item.get("url", "").split("?", 1)[0] == _CARD_URL
+    ]
     if matches:
         item = matches[0]
         if item.get("url") != url:
@@ -48,9 +52,9 @@ async def _async_register_card_resource(hass: HomeAssistant) -> None:
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     """Serve and register the Lovelace price graph bundled with the HACS integration."""
     frontend_path = Path(__file__).parent / "frontend"
-    await hass.http.async_register_static_paths([
-        StaticPathConfig(f"/{DOMAIN}", str(frontend_path), True)
-    ])
+    await hass.http.async_register_static_paths(
+        [StaticPathConfig(f"/{DOMAIN}", str(frontend_path), True)]
+    )
 
     async def register(_event=None) -> None:
         try:

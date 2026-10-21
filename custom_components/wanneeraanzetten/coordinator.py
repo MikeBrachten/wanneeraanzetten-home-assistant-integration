@@ -21,12 +21,13 @@ class WanneerAanzettenCoordinator(DataUpdateCoordinator[dict]):
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
         super().__init__(
-            hass, LOGGER, name=NAME, config_entry=entry,
+            hass,
+            LOGGER,
+            name=NAME,
+            config_entry=entry,
             update_interval=timedelta(minutes=1),
         )
-        self.api = WanneerAanzettenApi(
-            async_get_clientsession(hass), entry.data[CONF_ACCESS_TOKEN]
-        )
+        self.api = WanneerAanzettenApi(async_get_clientsession(hass), entry.data[CONF_ACCESS_TOKEN])
         self.country = entry.options.get(CONF_COUNTRY, entry.data[CONF_COUNTRY])
         self.account_id = entry.unique_id
 
