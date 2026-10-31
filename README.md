@@ -164,11 +164,15 @@ The integration ships 256 px and 512 px brand icons, shown by Home Assistant on 
 
 It is a custom integration maintained alongside the Wanneer Aanzetten service. It is not part of Home Assistant Core and is not endorsed by the Home Assistant project.
 
+### Why does the device list show a generic icon instead of my appliance icon?
+
+The **Start now** binary sensor uses the appliance icon saved in your Wanneer Aanzetten account. Home Assistant controls the icons in **Settings → Devices & services** and currently shows a fixed generic icon for device rows, independently of their sensor icons. The integration cannot customize those device-list icons through a supported API. See the [Home Assistant proposal for device icons](https://github.com/home-assistant/architecture/discussions/1507).
+
 ## Support and development
 
 Read [troubleshooting](docs/troubleshooting.md), [contributing](CONTRIBUTING.md), [security reporting](SECURITY.md), and the [changelog](CHANGELOG.md). Please do not put passwords, tokens, recovery codes, or private account details in public issues.
 
-Every compatibility target runs the complete 23-test suite in CI:
+Every compatibility target runs the complete test suite in CI:
 
 | Home Assistant | Python | Result |
 | --- | --- | --- |

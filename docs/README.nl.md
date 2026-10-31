@@ -79,3 +79,10 @@ De integratie bevat het logo op 256 en 512 pixels. Home Assistant ondersteunt lo
 merklogo’s vanaf versie 2026.3. Sommige HACS-versies halen het lijsticoon nog bij de oude
 CDN op. Daardoor kan HACS “icon not available” tonen terwijl het logo bij de geïnstalleerde
 integratie wel werkt. Dit is een [bekend HACS-probleem](https://github.com/hacs/integration/issues/5223).
+
+## Apparaatpictogrammen
+
+De sensor **Nu aanzetten** gebruikt het apparaatpictogram uit je Wanneer Aanzetten-account.
+De apparatenlijst onder **Instellingen → Apparaten & diensten** toont een vast standaardpictogram
+dat Home Assistant zelf bepaalt. Integraties kunnen dit via de ondersteunde API nog niet aanpassen.
+Hiervoor bestaat een [voorstel bij Home Assistant](https://github.com/home-assistant/architecture/discussions/1507).
