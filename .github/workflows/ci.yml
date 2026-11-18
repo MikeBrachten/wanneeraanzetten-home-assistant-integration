@@ -29,7 +29,7 @@ jobs:
           - homeassistant: 2026.3.3
             python: "3.14"
             requirements: tests/requirements-ha-2026.3.txt
-          - homeassistant: 2026.10.2
+          - homeassistant: 2026.10.4
             python: "3.14"
             requirements: tests/requirements.txt
     runs-on: ubuntu-latest
