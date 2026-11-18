@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 — 2026-10-31
+
+- Promote 0.2.0-beta2 to stable without changes to integration behavior.
+- Include the branded 24-hour price graph, estimated household price sensor, cloud tariff settings, and setup guidance.
+- Respect saved hourly or 15-minute contract intervals, with hourly prices when no interval is saved and an optional Home Assistant override.
+- Include the dashboard card editor and automatic resource-registration fixes from the beta releases.
+- Document the Home Assistant limitation: appliance icons appear on the “Start now” sensors, while Home Assistant controls the generic device-list icons.
+
 ## 0.2.0-beta2 — 2026-10-21
 
 - Respect the account’s saved hourly or 15-minute electricity contract interval, with hourly prices when no interval is saved.
@@ -12,14 +20,6 @@
 
 - Fix the branded price card editor when its configuration is initially empty.
 - Automatically load the card resource for config-entry installations.
-
-## 0.2.0 — 2026-10-21
-
-- Add an automatically registered, branded Lovelace card with a next-24-hour price graph.
-- Add an estimated household price sensor based on saved Dutch tariff settings; fixed fees are excluded.
-- Sync signed-in tariff settings through the account API and expose them to read-only Home Assistant links.
-- Add direct tariff settings links and setup guidance in the integration and dashboard card.
-- Include the bundled card in the HACS manual-install release archive.
 
 ## 0.1.1 — 2026-10-20
 
